@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller, HttpCode, Post, UseGuards
 } from '@nestjs/common'
@@ -18,11 +19,9 @@ export const createQuestionBodySchema = z.object({
 export type CreateQuestionBodySchema = z.infer<typeof createQuestionBodySchema>
 
 @Controller('/questions')
-@UseGuards(AuthGuard("jwt"))
 export class CreateQuestionController {
   constructor(
     private createQuestion: CreateQuestionUseCase,
-    private jwt: JwtService
   ) { }
   @Post()
   @HttpCode(201)
@@ -35,11 +34,15 @@ export class CreateQuestionController {
 
     const userId = user.sub
 
-    await this.createQuestion.execute({
+    const result = await this.createQuestion.execute({
       content,
       title,
       authorId: userId,
       attachmentsIds: []
     })
+
+    if (result.isLeft()) {
+      throw new BadRequestException()
+    }
   }
 }

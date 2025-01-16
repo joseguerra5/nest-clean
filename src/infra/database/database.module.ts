@@ -7,6 +7,8 @@ import { PrismaAnswerAttachmentsRepository } from "./prisma/repositories/prisma-
 import { PrismaAnswerRepository } from "./prisma/repositories/prisma-answer-repository";
 import { PrismaAnswerCommentsRepository } from "./prisma/repositories/prisma-answer-comments-repository";
 import { QuestionsRepository } from "@/domain/forum/application/repositories/questions-repository";
+import { StudentsRepository } from "@/domain/forum/application/repositories/students-repository";
+import { PrismaStudentsRepository } from "./prisma/repositories/prisma-students-repository";
 
 @Module({
   // para importar o Prismaservice em outros modulos precisa também fazer o export, dai fica disponível para outros modulos que exportarem esse modulo
@@ -18,11 +20,16 @@ import { QuestionsRepository } from "@/domain/forum/application/repositories/que
       provide: QuestionsRepository,
       useClass: PrismaQuestionRepository,
     },
+    {
+      provide: StudentsRepository,
+      useClass: PrismaStudentsRepository,
+    },
     PrismaAnswerAttachmentsRepository,
     PrismaAnswerRepository,
     PrismaAnswerCommentsRepository,
   ],
   exports: [
+    StudentsRepository,
     PrismaService,
     PrismaQuestionAttachmentRepository,
     PrismaQuestionCommentsRepository,
