@@ -3,6 +3,7 @@ import { AnswerAttachment } from "../../enterprise/entities/answer-attachment"
 
 
 export interface AnswerAttachmentsRepository {
-  findManyByAnswerdId(answerId: string): Promise<AnswerAttachment[]>
+  findManyByAnswerdId(answerId: string): Promise<AnswerAttachment[]>,
+  deleteManyByAnswerId(answerId: string): Promise<void>
 }
 

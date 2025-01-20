@@ -9,8 +9,8 @@ export interface AnswerProps {
   questionId: UniqueEntityId
   content: string
   attachments: AnswerAttatchmentList
-  createdAt: Date
-  updatedAt?: Date
+  createdAt?: Date
+  updatedAt?: Date | null
 }
 export class Answer extends AggregateRoot<AnswerProps> {
   // evita que outras propriedades acessam a propriedade answer e não são manipuladas diretamente
@@ -39,6 +39,10 @@ export class Answer extends AggregateRoot<AnswerProps> {
     return this.content.substring(0, 120).trimEnd().concat('...')
   }
 
+  get attachments() {
+    return this.props.attachments
+  }
+
   set content(content: string) {
     this.props.content = content
     this.touch()
@@ -55,7 +59,7 @@ export class Answer extends AggregateRoot<AnswerProps> {
   }
 
   static create(
-    props: Optional<AnswerProps, 'createdAt'>,
+    props: Optional<AnswerProps, 'createdAt' | "attachments">,
     id?: UniqueEntityId,
   ) {
     const answer = new Answer(

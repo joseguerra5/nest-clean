@@ -1,14 +1,11 @@
 import {
-  BadRequestException,
-  ConflictException,
-  Controller, Get, Query, UseGuards
+  BadRequestException, Controller, Get, Query, UseGuards
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { FetchRecentQuestionUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions'
 import { QuestionPresenter } from '../presenters/question-presenter'
-import { StudentAlreadyExistsError } from '@/domain/forum/application/use-cases/errors/student-already-exist-error'
 
 const pageQueryParamSchema = z.string().optional().default("1").transform(Number).pipe(z.number().min(1))
 

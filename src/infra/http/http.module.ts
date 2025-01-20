@@ -11,6 +11,8 @@ import { RegisterStudentUseCase } from "@/domain/forum/application/use-cases/reg
 import { AuthenticateStudentUseCase } from "@/domain/forum/application/use-cases/authenticate-student";
 import { CryptographyModule } from "../cryptography/cryptography.module";
 import { APP_GUARD } from "@nestjs/core";
+import { GetQuestionBySlugsController } from "./controllers/get-questions-by-slug";
+import { GetQuestionBySlugUseCase } from "@/domain/forum/application/use-cases/get-question-by-slug";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -18,13 +20,15 @@ import { APP_GUARD } from "@nestjs/core";
     CreateAccountController,
     AuthenticateController,
     CreateQuestionController,
-    FetchRecentQuestionsController
+    FetchRecentQuestionsController,
+    GetQuestionBySlugsController
   ],
   providers: [
     CreateQuestionUseCase,
     FetchRecentQuestionUseCase,
     RegisterStudentUseCase,
-    AuthenticateStudentUseCase
+    AuthenticateStudentUseCase,
+    GetQuestionBySlugUseCase
   ]
 })
 export class HttpModule { }
