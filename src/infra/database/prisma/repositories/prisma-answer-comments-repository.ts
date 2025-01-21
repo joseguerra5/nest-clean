@@ -12,8 +12,13 @@ export class PrismaAnswerCommentsRepository implements AnswerCommentsRepository 
   ) { }
 
   async create(answerComment: AnswerComment): Promise<void> {
-    throw new Error("Method not implemented.");
+    const data = PrismaAnswerCommentMapper.toPersistence(answerComment)
+   
+       await this.prisma.comment.create({
+         data,
+       })
   }
+
   async findById(id: string): Promise<AnswerComment | null> {
     const answerComment = await this.prisma.comment.findUnique({
       where: {

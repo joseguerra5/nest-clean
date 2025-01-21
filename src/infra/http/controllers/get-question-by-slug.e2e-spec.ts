@@ -40,7 +40,6 @@ describe("Get question by slug (E2E)", () => {
       },
     })
 
-    console.log(prismaCheck)
     await questionFactory.makePrismaQuestion({
       authorId: user.id,
       title: "New question",

@@ -31,6 +31,8 @@ export class StudentFactory {
       data: PrismaStudentMapper.toPersistence(student)
     })
 
+    
+
     return student
   }
 }

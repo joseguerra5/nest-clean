@@ -3,6 +3,7 @@ import { Answer } from "../../enterprise/entities/answer";
 import { AnswersRepository } from "../repositories/answer-repository";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
 import { ResouceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { Injectable } from "@nestjs/common";
 
 interface EditAnswerUseCaseRequest {
   authorId: string
@@ -13,6 +14,8 @@ interface EditAnswerUseCaseRequest {
 type EditAnswerUseCaseResponse = Either<NotAllowedError | ResouceNotFoundError, {
   answer: Answer
 }>
+
+@Injectable()
 export class EditAnswerUseCase {
   constructor(private answerRepository: AnswersRepository) { }
   async execute({

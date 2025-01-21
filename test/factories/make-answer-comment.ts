@@ -1,6 +1,9 @@
 import { faker } from "@faker-js/faker"
 import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 import { AnswerComment, AnswerCommentProps } from "@/domain/forum/enterprise/entities/answer-comment";
+import { PrismaService } from "@/infra/database/prisma/prisma.service";
+import { Injectable } from "@nestjs/common";
+import { PrismaAnswerCommentMapper } from "@/infra/database/prisma/mappers/prima-answer-comment";
 
 export function makeAnswerComment(
   // overide faz receber todas as propriedades do answerprops como opcional
@@ -15,4 +18,19 @@ export function makeAnswerComment(
   }, id)
 
   return answerComment
+}
+
+@Injectable()
+export class AnswerCommentFactory {
+  constructor(private prisma: PrismaService) { }
+
+  async makePrismaAnswerComment(data: Partial<AnswerCommentProps> = {}): Promise<AnswerComment> {
+    const answerComment = makeAnswerComment(data)
+
+    await this.prisma.comment.create({
+      data: PrismaAnswerCommentMapper.toPersistence(answerComment)
+    })
+
+    return answerComment
+  }
 }

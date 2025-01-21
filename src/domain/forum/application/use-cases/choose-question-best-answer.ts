@@ -5,6 +5,7 @@ import { AnswersRepository } from "../repositories/answer-repository";
 import { QuestionsRepository } from "../repositories/questions-repository";
 import { NotAllowedError } from "@/core/errors/not-allowed-error";
 import { ResouceNotFoundError } from "@/core/errors/resource-not-found-error";
+import { Injectable } from "@nestjs/common";
 
 interface ChooseQuestionBestAnswerAnswerUseCaseRequest {
   authorId: string
@@ -14,7 +15,9 @@ interface ChooseQuestionBestAnswerAnswerUseCaseRequest {
 type ChooseQuestionBestAnswerAnswerUseCaseResponse = Either<NotAllowedError | ResouceNotFoundError, {
   question: Question
 }>
-export class ChooseQuestionBestAnswerAnswerUseCase {
+
+@Injectable()
+export class ChooseQuestionBestAnswerUseCase {
   constructor(
     private answerRepository: AnswersRepository,
     private questionRepository: QuestionsRepository

@@ -6,20 +6,22 @@ import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { hash } from 'bcryptjs';
 import request from "supertest"
+import { AnswerFactory } from 'test/factories/make-answer';
 import { QuestionFactory } from 'test/factories/make-question';
 import { StudentFactory } from 'test/factories/make-student';
 
-describe("Create question (E2E)", () => {
+describe("Delete answer (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let studentFactory: StudentFactory
+  let answerFactory: AnswerFactory
   let questionFactory: QuestionFactory
   let jwt: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, QuestionFactory]
+      providers: [StudentFactory, AnswerFactory, QuestionFactory]
     })
       .compile();
 
@@ -28,33 +30,40 @@ describe("Create question (E2E)", () => {
     prisma = moduleRef.get(PrismaService)
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
+    answerFactory = moduleRef.get(AnswerFactory)
 
     jwt = moduleRef.get(JwtService)
     await app.init();
   });
-  test("[POST] /questions", async () => {
+  test("[DELETE] /answers/:answerId", async () => {
     const user = await studentFactory.makePrismaStudent({
       password: await hash("123456", 8),
     })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id
+    })
+
+    const answer = await answerFactory.makePrismaAnswer({
+      authorId: user.id,
+      questionId: question.id
+    })
+
     const response = await request(app.getHttpServer())
-      .post("/questions")
+      .delete(`/answers/${answer.id.toString()}`)
       .set("Authorization", `Bearer ${accessToken}`)
-      .send({
-        title: "New question",
-        content: "Question content",
-      })
+      .send()
 
-    expect(response.statusCode).toBe(201)
+    expect(response.statusCode).toBe(200)
 
-    const questionOnDatabase = await prisma.question.findFirst({
+    const answerOnDatabase = await prisma.answer.findFirst({
       where: {
-        title: "New question"
+        content: "Answer content",
       }
     })
 
-    expect(questionOnDatabase).toBeTruthy()
+    expect(answerOnDatabase).toBeFalsy()
   })
 })

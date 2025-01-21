@@ -9,7 +9,7 @@ import request from "supertest"
 import { QuestionFactory } from 'test/factories/make-question';
 import { StudentFactory } from 'test/factories/make-student';
 
-describe("Create question (E2E)", () => {
+describe("Answer question (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let studentFactory: StudentFactory
@@ -32,29 +32,32 @@ describe("Create question (E2E)", () => {
     jwt = moduleRef.get(JwtService)
     await app.init();
   });
-  test("[POST] /questions", async () => {
+  test("[POST] /questions/:questionId/answers", async () => {
     const user = await studentFactory.makePrismaStudent({
       password: await hash("123456", 8),
     })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
+    const question = await questionFactory.makePrismaQuestion({
+      authorId: user.id
+    })
+
     const response = await request(app.getHttpServer())
-      .post("/questions")
+      .post(`/questions/${question.id.toString()}/answers`)
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
-        title: "New question",
-        content: "Question content",
+        content: "new content",
       })
 
     expect(response.statusCode).toBe(201)
 
-    const questionOnDatabase = await prisma.question.findFirst({
+    const answerOnDatabase = await prisma.answer.findFirst({
       where: {
-        title: "New question"
+        content: "new content",
       }
     })
 
-    expect(questionOnDatabase).toBeTruthy()
+    expect(answerOnDatabase).toBeTruthy()
   })
 })

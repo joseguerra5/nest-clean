@@ -1,10 +1,8 @@
 import {
   BadRequestException,
   Body,
-  Controller, HttpCode, Post, UseGuards
+  Controller, HttpCode, Post
 } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { AuthGuard } from '@nestjs/passport'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'

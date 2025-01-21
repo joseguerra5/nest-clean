@@ -1,6 +1,6 @@
 import { InMemoryAnswerRepository } from 'test/repositories/in-memory-answer-repository'
 import { InMemoryQuestionRepository } from 'test/repositories/in-memory-questions-repository'
-import { ChooseQuestionBestAnswerAnswerUseCase } from './choose-question-best-answer'
+import { ChooseQuestionBestAnswerUseCase } from './choose-question-best-answer'
 import { makeQuestion } from 'test/factories/make-question'
 import { makeAnswer } from 'test/factories/make-answer'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
@@ -8,13 +8,13 @@ import { NotAllowedError } from '@/core/errors/not-allowed-error'
 let inMemoryQuestionRepository: InMemoryQuestionRepository
 let inMemoryAnswerRepository: InMemoryAnswerRepository
 
-let sut: ChooseQuestionBestAnswerAnswerUseCase
+let sut: ChooseQuestionBestAnswerUseCase
 
 describe('Choose a question', () => {
   beforeEach(() => {
     inMemoryQuestionRepository = new InMemoryQuestionRepository()
     inMemoryAnswerRepository = new InMemoryAnswerRepository()
-    sut = new ChooseQuestionBestAnswerAnswerUseCase(inMemoryAnswerRepository, inMemoryQuestionRepository)
+    sut = new ChooseQuestionBestAnswerUseCase(inMemoryAnswerRepository, inMemoryQuestionRepository)
   })
   it('should be able to choose the question best answer', async () => {
 
