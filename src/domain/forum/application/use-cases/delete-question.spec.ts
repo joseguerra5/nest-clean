@@ -2,13 +2,16 @@ import { InMemoryQuestionRepository } from 'test/repositories/in-memory-question
 import { makeQuestion } from 'test/factories/make-question'
 import { DeleteQuestionUseCase } from './delete-question'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { InMemoryQuestionAttachmentRepository } from 'test/repositories/in-memory-question-attachment-repository'
 
 let inMemoryQuestionRepository: InMemoryQuestionRepository
+let inMemoryQuestionAttachmentRepository: InMemoryQuestionAttachmentRepository
 let sut: DeleteQuestionUseCase
 
 describe('Delete a question', () => {
   beforeEach(() => {
-    inMemoryQuestionRepository = new InMemoryQuestionRepository()
+    inMemoryQuestionAttachmentRepository = new InMemoryQuestionAttachmentRepository()
+    inMemoryQuestionRepository = new InMemoryQuestionRepository(inMemoryQuestionAttachmentRepository)
     sut = new DeleteQuestionUseCase(inMemoryQuestionRepository)
   })
   it('should be able to delete a question', async () => {
@@ -37,10 +40,10 @@ describe('Delete a question', () => {
     await inMemoryQuestionRepository.create(newQuestion)
 
     const result = await sut.execute({
-        questionId: "question-01",
-        authorId: "author-02"
-      })
-  
-      expect(result.value).toBeInstanceOf(Error)
+      questionId: "question-01",
+      authorId: "author-02"
+    })
+
+    expect(result.value).toBeInstanceOf(Error)
   })
 })

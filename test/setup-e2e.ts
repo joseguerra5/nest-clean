@@ -1,8 +1,12 @@
-import "dotenv/config"
+import { config } from "dotenv"
 
 import { PrismaClient } from "@prisma/client"
 import { randomUUID } from "crypto"
 import { execSync } from "child_process"
+
+// essa config faz com que quando rode os testes as variaveis ambiente consigam subscrever+
+config({ path: ".env", override: true })
+config({ path: ".env.test", override: true })
 
 const prisma = new PrismaClient()
 
