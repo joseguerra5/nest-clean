@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module'
 import { HttpModule } from './http/http.module'
 import { EnvService } from './env/env.service'
 import { EnvModule } from './env/env.module'
+import { StorageModule } from './storage/storage.module'
 
 @Module({
   imports: [

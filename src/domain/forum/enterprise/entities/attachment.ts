@@ -3,19 +3,19 @@ import { UniqueEntityId } from "@/core/entities/unique-entity-id";
 
 interface AttatchmentProps {
   title: string
-  link: string
+  url: string
 }
-export class Attatchment extends Entity<AttatchmentProps> {
+export class Attachment extends Entity<AttatchmentProps> {
   get title() {
     return this.props.title
   }
 
-  get link() {
-    return this.props.link
+  get url() {
+    return this.props.url
   }
 
   static create(props: AttatchmentProps, id?: UniqueEntityId) {
-    const attatchment = new Attatchment(props, id)
+    const attatchment = new Attachment(props, id)
 
     return attatchment
   }
