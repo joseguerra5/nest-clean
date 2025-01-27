@@ -5,9 +5,11 @@ import { makeQuestion } from 'test/factories/make-question'
 import { makeAnswer } from 'test/factories/make-answer'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { InMemoryQuestionAttachmentRepository } from 'test/repositories/in-memory-question-attachment-repository'
+import { InMemoryAnswerAttachmentRepository } from 'test/repositories/in-memory-answer-attachment-repository'
 
 let inMemoryQuestionRepository: InMemoryQuestionRepository
 let inMemoryQuestionAttachmentRepository: InMemoryQuestionAttachmentRepository
+let inMemoryAnswerAttachmentRepository: InMemoryAnswerAttachmentRepository
 let inMemoryAnswerRepository: InMemoryAnswerRepository
 
 let sut: ChooseQuestionBestAnswerUseCase
@@ -16,7 +18,8 @@ describe('Choose a question', () => {
   beforeEach(() => {
     inMemoryQuestionAttachmentRepository = new InMemoryQuestionAttachmentRepository()
     inMemoryQuestionRepository = new InMemoryQuestionRepository(inMemoryQuestionAttachmentRepository)
-    inMemoryAnswerRepository = new InMemoryAnswerRepository()
+    inMemoryAnswerAttachmentRepository = new InMemoryAnswerAttachmentRepository()
+    inMemoryAnswerRepository = new InMemoryAnswerRepository(inMemoryAnswerAttachmentRepository)
     sut = new ChooseQuestionBestAnswerUseCase(inMemoryAnswerRepository, inMemoryQuestionRepository)
   })
   it('should be able to choose the question best answer', async () => {

@@ -32,7 +32,6 @@ export class UploadAttachmentController {
 
     if (result.isLeft()) {
       const error = result.value
-
       switch (error.constructor) {
         case InvalidAttachmentTypeError:
           throw new BadRequestException(error.message)

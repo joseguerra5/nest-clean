@@ -3,14 +3,18 @@ import { CommentOnAnswerUseCase } from './comment-on-answer'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { makeAnswer } from 'test/factories/make-answer'
 import { InMemoryAnswerRepository } from 'test/repositories/in-memory-answer-repository'
+import { InMemoryAnswerAttachmentRepository } from 'test/repositories/in-memory-answer-attachment-repository'
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository
 let inMemoryAnswerCommentRepository: InMemoryAnswerCommentRepository
+let inMemoryAnswerAttachmentRepository: InMemoryAnswerAttachmentRepository
+
 let sut: CommentOnAnswerUseCase
 
 describe('Create a answer comment', () => {
   beforeEach(() => {
-    inMemoryAnswerRepository = new InMemoryAnswerRepository()
+    inMemoryAnswerAttachmentRepository = new InMemoryAnswerAttachmentRepository()
+    inMemoryAnswerRepository = new InMemoryAnswerRepository(inMemoryAnswerAttachmentRepository)
     inMemoryAnswerCommentRepository = new InMemoryAnswerCommentRepository()
     sut = new CommentOnAnswerUseCase(inMemoryAnswerCommentRepository, inMemoryAnswerRepository)
   })

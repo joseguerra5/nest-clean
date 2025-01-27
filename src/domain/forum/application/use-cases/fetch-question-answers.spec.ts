@@ -2,13 +2,16 @@ import { makeAnswer } from 'test/factories/make-answer'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { InMemoryAnswerRepository } from 'test/repositories/in-memory-answer-repository'
 import { FetchQuestionAnswerUseCase } from './fetch-question-answers'
+import { InMemoryAnswerAttachmentRepository } from 'test/repositories/in-memory-answer-attachment-repository'
 
 let inMemoryAnswersRepository: InMemoryAnswerRepository
+let inMemoryAnswerAttachmentRepository: InMemoryAnswerAttachmentRepository
 let sut: FetchQuestionAnswerUseCase
 
 describe('Get answers by question Id', () => {
   beforeEach(() => {
-    inMemoryAnswersRepository = new InMemoryAnswerRepository()
+    inMemoryAnswerAttachmentRepository = new InMemoryAnswerAttachmentRepository()
+    inMemoryAnswersRepository = new InMemoryAnswerRepository(inMemoryAnswerAttachmentRepository)
     sut = new FetchQuestionAnswerUseCase(inMemoryAnswersRepository)
   })
   it('should be able to fetch recent answers', async () => {

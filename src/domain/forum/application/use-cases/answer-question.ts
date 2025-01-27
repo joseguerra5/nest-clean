@@ -2,7 +2,7 @@ import { Either, right } from '@/core/either'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Answer } from '../../enterprise/entities/answer'
 import { AnswersRepository } from '../repositories/answer-repository'
-import { AnswerAttatchmentList } from '../../enterprise/entities/answer-attachment-list'
+import { AnswerAttachmentList } from '../../enterprise/entities/answer-attachment-list'
 import { AnswerAttachment } from '../../enterprise/entities/answer-attachment'
 import { Injectable } from '@nestjs/common'
 
@@ -33,7 +33,7 @@ export class AnswerQuestionUseCase {
       content,
       authorId: new UniqueEntityId(authorId),
       questionId: new UniqueEntityId(questionId),
-      attachments: new AnswerAttatchmentList([]),
+      attachments: new AnswerAttachmentList([]),
     })
 
     const answerAttachments = attachmentsIds.map((attachmentId) => {
@@ -43,7 +43,7 @@ export class AnswerQuestionUseCase {
       })
     })
 
-    answer.attachments = new AnswerAttatchmentList(answerAttachments)
+    answer.attachments = new AnswerAttachmentList(answerAttachments)
 
     await this.answersRepository.create(answer)
 

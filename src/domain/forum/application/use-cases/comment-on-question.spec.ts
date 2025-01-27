@@ -18,15 +18,16 @@ describe('Create a question comment', () => {
     sut = new CommentOnQuestionUseCase(inMemoryQuestionCommentRepository, inMemoryQuestionRepository)
   })
   it('should be able create a question comment', async () => {
-    await inMemoryQuestionRepository.create(makeQuestion({ authorId: new UniqueEntityId("author-01") }))
+    const question = makeQuestion()
+    await inMemoryQuestionRepository.create(question)
 
     const result = await sut.execute({
-      authorId: "author-01",
+      authorId: question.authorId.toString(),
       content: "example-01",
-      questionId: inMemoryQuestionRepository.items[0].id.toString()
+      questionId: question.id.toString()
     })
-
     expect(result.isRight()).toBe(true)
-    expect(inMemoryQuestionCommentRepository.items[0]).toEqual(result.value?.questionComment)
+    
+    expect(inMemoryQuestionCommentRepository.items[0].content).toEqual("example-01")
   })
 })

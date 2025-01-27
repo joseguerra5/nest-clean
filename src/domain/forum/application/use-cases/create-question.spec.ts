@@ -34,6 +34,6 @@ describe('Create a question', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    expect(inMemoryQuestionAttachmentsRepository.items[0]).toHaveLength(2)
+    expect(inMemoryQuestionAttachmentsRepository.items).toHaveLength(2)
   })
 })

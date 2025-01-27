@@ -25,6 +25,5 @@ export class OnAnswerCreated implements EventHandler {
         content: question.excerpt,
       })
     }
-    console.log(answer)
   }
 }

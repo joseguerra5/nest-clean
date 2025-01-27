@@ -12,6 +12,7 @@ import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/crea
 export const createQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
+  attachments: z.array(z.string().uuid())
 })
 
 export type CreateQuestionBodySchema = z.infer<typeof createQuestionBodySchema>
@@ -28,7 +29,7 @@ export class CreateQuestionController {
     @CurrentUser() user: UserPayload
   ) {
 
-    const { content, title } = body
+    const { content, title, attachments } = body
 
     const userId = user.sub
 
@@ -36,7 +37,7 @@ export class CreateQuestionController {
       content,
       title,
       authorId: userId,
-      attachmentsIds: []
+      attachmentsIds: attachments
     })
 
     if (result.isLeft()) {

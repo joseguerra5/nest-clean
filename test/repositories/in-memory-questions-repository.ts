@@ -5,10 +5,10 @@ import { QuestionsRepository } from '@/domain/forum/application/repositories/que
 import { Question } from '@/domain/forum/enterprise/entities/question'
 
 export class InMemoryQuestionRepository implements QuestionsRepository {
+  public items: Question[] = []
   constructor(
     private questionAttachmentsRepository: QuestionAttachmentsRepository
   ) { }
-  public items: Question[] = []
 
   async findManyRecents({ page }: PaginationParams) {
     const questions = this.items
@@ -60,7 +60,9 @@ export class InMemoryQuestionRepository implements QuestionsRepository {
     this.items.push(question)
 
     //salvo os question attachments no repositorio
-    await this.questionAttachmentsRepository.createMany(question.attachments.getItems())
+    await this.questionAttachmentsRepository.createMany(
+      question.attachments.getItems()
+    )
 
     DomainEvents.dispatchEventsForAggregate(question.id)
   }

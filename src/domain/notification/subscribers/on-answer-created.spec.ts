@@ -13,6 +13,7 @@ import { InMemoryQuestionAttachmentRepository } from "test/repositories/in-memor
 let inMemoryQuestionAttachmentRepository: InMemoryQuestionAttachmentRepository
 let inMemoryQuestionRepository: InMemoryQuestionRepository
 let inMemoryAnswerRepository: InMemoryAnswerRepository
+let inMemoryAnswerAttachmentRepository: InMemoryAnswerAttachmentRepository
 let inMemoryNotificationRepository: InMemoryNotificationRepository
 let inMemoryAnswerAttachmentsRepository: InMemoryAnswerAttachmentRepository
 let sendNotificationUseCase: SendNotificationUseCase
@@ -20,7 +21,8 @@ let sendNotificationUseCase: SendNotificationUseCase
 let sendNotificationExecuteSpy: MockInstance
 describe("On Answer Created", () => {
   beforeEach(() => {
-    inMemoryAnswerRepository = new InMemoryAnswerRepository()
+    inMemoryAnswerAttachmentRepository = new InMemoryAnswerAttachmentRepository()
+    inMemoryAnswerRepository = new InMemoryAnswerRepository(inMemoryAnswerAttachmentRepository)
     inMemoryAnswerAttachmentsRepository = new InMemoryAnswerAttachmentRepository()
     inMemoryQuestionAttachmentRepository = new InMemoryQuestionAttachmentRepository()
     inMemoryQuestionRepository = new InMemoryQuestionRepository(inMemoryQuestionAttachmentRepository)
@@ -48,8 +50,5 @@ describe("On Answer Created", () => {
     await waitFor(() => {
       expect(sendNotificationExecuteSpy).toHaveBeenCalled()
     })
-
-
-
   })
 })

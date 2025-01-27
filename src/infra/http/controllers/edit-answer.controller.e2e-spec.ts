@@ -7,6 +7,7 @@ import { Test } from '@nestjs/testing';
 import { hash } from 'bcryptjs';
 import request from "supertest"
 import { AnswerFactory } from 'test/factories/make-answer';
+import { AttachmentFactory } from 'test/factories/make-attachment';
 import { QuestionFactory } from 'test/factories/make-question';
 import { StudentFactory } from 'test/factories/make-student';
 
@@ -16,12 +17,13 @@ describe("Edit answer (E2E)", () => {
   let studentFactory: StudentFactory
   let answerFactory: AnswerFactory
   let questionFactory: QuestionFactory
+  let attachmentFactory: AttachmentFactory
   let jwt: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [StudentFactory, AnswerFactory, QuestionFactory]
+      providers: [StudentFactory, AnswerFactory, QuestionFactory, AttachmentFactory]
     })
       .compile();
 
@@ -31,6 +33,7 @@ describe("Edit answer (E2E)", () => {
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
     answerFactory = moduleRef.get(AnswerFactory)
+    attachmentFactory = moduleRef.get(AttachmentFactory)
 
     jwt = moduleRef.get(JwtService)
     await app.init();
@@ -41,6 +44,9 @@ describe("Edit answer (E2E)", () => {
     })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
+
+    const attachment1 = await attachmentFactory.makePrismaAttachment()
+    const attachment2 = await attachmentFactory.makePrismaAttachment()
 
     const question = await questionFactory.makePrismaQuestion({
       authorId: user.id
@@ -56,6 +62,10 @@ describe("Edit answer (E2E)", () => {
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
         content: "Answer content",
+        attachments: [
+          attachment1.id.toString(),
+          attachment2.id.toString(),
+        ]
       })
 
     expect(response.statusCode).toBe(204)
