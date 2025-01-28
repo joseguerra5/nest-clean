@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { FetchQuestionCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-question-comments'
-import { CommentPresenter } from '../presenters/comment-presenter'
+import { CommentWithAuthorPresenter } from '../presenters/comment-with-author-presenter'
 
 const pageQueryParamSchema = z.string().optional().default("1").transform(Number).pipe(z.number().min(1))
 
@@ -33,10 +33,10 @@ export class FetchQuestionCommentsController {
       throw new BadRequestException()
     }
 
-    const questionComments = result.value.questionsComments
+    const questionComments = result.value.comments
 
     return {
-      comments: questionComments.map(CommentPresenter.toHTTP)
+      comments: questionComments.map(CommentWithAuthorPresenter.toHTTP)
     }
   }
 }

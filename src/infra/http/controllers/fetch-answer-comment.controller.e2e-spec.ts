@@ -17,7 +17,6 @@ describe("Fetch answers comments (E2E)", () => {
   let prisma: PrismaService;
   let studentFactory: StudentFactory
   let questionFactory: QuestionFactory
-  let questionCommentsFactory: QuestionCommentFactory
   let answerCommentsFactory: AnswerCommentFactory
   let answerFactory: AnswerFactory
   let jwt: JwtService
@@ -34,15 +33,15 @@ describe("Fetch answers comments (E2E)", () => {
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
     answerFactory = moduleRef.get(AnswerFactory)
-    questionCommentsFactory = moduleRef.get(QuestionCommentFactory)
     answerCommentsFactory = moduleRef.get(AnswerCommentFactory)
     prisma = moduleRef.get(PrismaService)
     jwt = moduleRef.get(JwtService)
     await app.init();
   });
-  test("[GET] /answers/:questionId/comments", async () => {
+  test("[GET] /answers/:answerId/comments", async () => {
     const user = await studentFactory.makePrismaStudent({
       password: await hash("123456", 8),
+      name: "John Doe"
     })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
@@ -80,8 +79,8 @@ describe("Fetch answers comments (E2E)", () => {
 
     expect(response.body).toEqual({
       comments: expect.arrayContaining([
-        expect.objectContaining({ content: "comment 01" }),
-        expect.objectContaining({ content: "comment 02" })
+        expect.objectContaining({ content: "comment 01", authorName: "John Doe" }),
+        expect.objectContaining({ content: "comment 02", authorName: "John Doe" })
       ])
     })
   })

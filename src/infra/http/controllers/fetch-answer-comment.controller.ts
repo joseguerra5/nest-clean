@@ -4,8 +4,8 @@ import {
 import { AuthGuard } from '@nestjs/passport'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
-import { CommentPresenter } from '../presenters/comment-presenter'
 import { FetchAnswerCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-answer-comments'
+import { CommentWithAuthorPresenter } from '../presenters/comment-with-author-presenter'
 
 const pageQueryParamSchema = z.string().optional().default("1").transform(Number).pipe(z.number().min(1))
 
@@ -24,6 +24,7 @@ export class FetchAnswerCommentsController {
     @Query("page", queryValidationPipe) page: PageQueryParamSchema,
     @Param("answerId") answerId: string
   ) {
+
     const result = await this.fetchAnswerComments.execute({
       page,
       answerId
@@ -33,10 +34,10 @@ export class FetchAnswerCommentsController {
       throw new BadRequestException()
     }
 
-    const answersComments = result.value.answersComments
+    const comments = result.value.comments
 
     return {
-      comments: answersComments.map(CommentPresenter.toHTTP)
+      comments: comments.map(CommentWithAuthorPresenter.toHTTP)
     }
   }
 }

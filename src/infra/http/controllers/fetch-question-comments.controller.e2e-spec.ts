@@ -6,7 +6,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { hash } from 'bcryptjs';
 import request from "supertest";
-import { AnswerFactory } from 'test/factories/make-answer';
 import { QuestionFactory } from 'test/factories/make-question';
 import { QuestionCommentFactory } from 'test/factories/make-question-comment';
 import { StudentFactory } from 'test/factories/make-student';
@@ -37,6 +36,7 @@ describe("Fetch question comments (E2E)", () => {
   });
   test("[GET] /questions/:questionId/comments", async () => {
     const user = await studentFactory.makePrismaStudent({
+      name: "John Doe",
       password: await hash("123456", 8),
     })
 
@@ -70,8 +70,8 @@ describe("Fetch question comments (E2E)", () => {
 
     expect(response.body).toEqual({
       comments: expect.arrayContaining([
-        expect.objectContaining({ content: "comment 01" }),
-        expect.objectContaining({ content: "comment 02" })
+        expect.objectContaining({ content: "comment 01", authorName: "John Doe" }),
+        expect.objectContaining({ content: "comment 02", authorName: "John Doe" })
       ])
     })
   })
