@@ -1,6 +1,3 @@
-import { InMemoryStudentRepository } from 'test/repositories/in-memory-student-repository'
-import { RegisterStudentUseCase } from './register-student'
-import { FakeHasher } from 'test/cryptography/fake-hasher'
 import { UploadAndCreateAttachmentUseCase } from './upload-and-create-attachment'
 import { InMemoryAttachmentRepository } from 'test/repositories/in-memory-attachment-repository'
 import { FakeUploader } from 'test/storage/fake-uploader'
@@ -14,38 +11,39 @@ describe('Upload and create attachment', () => {
   beforeEach(() => {
     inMemoryAttachmentRepository = new InMemoryAttachmentRepository()
     fakeUploader = new FakeUploader()
-    sut = new UploadAndCreateAttachmentUseCase( inMemoryAttachmentRepository, fakeUploader)
+    sut = new UploadAndCreateAttachmentUseCase(
+      inMemoryAttachmentRepository,
+      fakeUploader,
+    )
   })
   it('should be able Upload and create attachment', async () => {
     const result = await sut.execute({
-      fileName: "profile.png",
-      fileType: "image/png",
-      body: Buffer.from("")
+      fileName: 'profile.png',
+      fileType: 'image/png',
+      body: Buffer.from(''),
     })
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toEqual({
-      attachment: inMemoryAttachmentRepository.items[0]
+      attachment: inMemoryAttachmentRepository.items[0],
     })
     expect(fakeUploader.uploads).toHaveLength(1)
-    expect(fakeUploader.uploads[0]).toEqual(expect.objectContaining({
-      fileName: "profile.png"
-    }))
-
-
+    expect(fakeUploader.uploads[0]).toEqual(
+      expect.objectContaining({
+        fileName: 'profile.png',
+      }),
+    )
   })
 
   it('should not be able Upload and create attachment with invalid file type', async () => {
     const result = await sut.execute({
-      fileName: "profile.png",
-      fileType: "audio/mpeg",
-      body: Buffer.from("")
-
+      fileName: 'profile.png',
+      fileType: 'audio/mpeg',
+      body: Buffer.from(''),
     })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(InvalidAttachmentTypeError)
     expect(fakeUploader.uploads).toHaveLength(0)
-
   })
 })

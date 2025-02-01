@@ -1,18 +1,16 @@
-import { AppModule } from '@/infra/app.module';
-import { DatabaseModule } from '@/infra/database/database.module';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
-import { INestApplication } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Test } from '@nestjs/testing';
-import { hash } from 'bcryptjs';
-import request from "supertest";
-import { AnswerFactory } from 'test/factories/make-answer';
-import { QuestionFactory } from 'test/factories/make-question';
-import { StudentFactory } from 'test/factories/make-student';
+import { AppModule } from '@/infra/app.module'
+import { DatabaseModule } from '@/infra/database/database.module'
+import { INestApplication } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { Test } from '@nestjs/testing'
+import { hash } from 'bcryptjs'
+import request from 'supertest'
+import { AnswerFactory } from 'test/factories/make-answer'
+import { QuestionFactory } from 'test/factories/make-question'
+import { StudentFactory } from 'test/factories/make-student'
 
-describe("Fetch question answers (E2E)", () => {
-  let app: INestApplication;
-  let prisma: PrismaService;
+describe('Fetch question answers (E2E)', () => {
+  let app: INestApplication
   let studentFactory: StudentFactory
   let questionFactory: QuestionFactory
   let answerFactory: AnswerFactory
@@ -22,56 +20,53 @@ describe("Fetch question answers (E2E)", () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
       providers: [StudentFactory, QuestionFactory, AnswerFactory],
-    })
-      .compile();
+    }).compile()
 
-    app = moduleRef.createNestApplication();
+    app = moduleRef.createNestApplication()
 
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
     answerFactory = moduleRef.get(AnswerFactory)
-    prisma = moduleRef.get(PrismaService)
     jwt = moduleRef.get(JwtService)
-    await app.init();
-  });
-  test("[GET] /questions/:questionId/answers", async () => {
+    await app.init()
+  })
+  test('[GET] /questions/:questionId/answers', async () => {
     const user = await studentFactory.makePrismaStudent({
-      password: await hash("123456", 8),
+      password: await hash('123456', 8),
     })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
     const question = await questionFactory.makePrismaQuestion({
       authorId: user.id,
-      title: "New question"
+      title: 'New question',
     })
-
 
     await Promise.all([
       answerFactory.makePrismaAnswer({
         authorId: user.id,
         questionId: question.id,
-        content: "answer 02"
+        content: 'answer 02',
       }),
       answerFactory.makePrismaAnswer({
         authorId: user.id,
         questionId: question.id,
-        content: "answer 01"
+        content: 'answer 01',
       }),
     ])
 
     const response = await request(app.getHttpServer())
       .get(`/questions/${question.id.toString()}/answers`)
-      .set("Authorization", `Bearer ${accessToken}`)
+      .set('Authorization', `Bearer ${accessToken}`)
       .send()
 
     expect(response.statusCode).toBe(200)
 
     expect(response.body).toEqual({
       answers: expect.arrayContaining([
-        expect.objectContaining({ content: "answer 01" }),
-        expect.objectContaining({ content: "answer 02" })
-      ])
+        expect.objectContaining({ content: 'answer 01' }),
+        expect.objectContaining({ content: 'answer 02' }),
+      ]),
     })
   })
 })

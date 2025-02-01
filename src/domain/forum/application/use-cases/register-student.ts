@@ -11,25 +11,29 @@ interface RegisterStudentUseCaseRequest {
   password: string
 }
 
-type RegisterStudentUseCaseReponse = Either<StudentAlreadyExistsError, {
-  student: Student
-}>
+type RegisterStudentUseCaseReponse = Either<
+  StudentAlreadyExistsError,
+  {
+    student: Student
+  }
+>
 
 @Injectable()
 export class RegisterStudentUseCase {
   // dependencias
   constructor(
     private studentsRepository: StudentsRepository,
-    private hashGenerator: HashGenerator
-  ) { }
+    private hashGenerator: HashGenerator,
+  ) {}
+
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     name,
     email,
-    password
+    password,
   }: RegisterStudentUseCaseRequest): Promise<RegisterStudentUseCaseReponse> {
-
-    const studentWithSameEmail = await this.studentsRepository.findByEmail(email)
+    const studentWithSameEmail =
+      await this.studentsRepository.findByEmail(email)
 
     if (studentWithSameEmail) {
       return left(new StudentAlreadyExistsError(email))
@@ -43,12 +47,10 @@ export class RegisterStudentUseCase {
       password: passwordHash,
     })
 
-    await this.studentsRepository.create(
-      student,
-    )
+    await this.studentsRepository.create(student)
 
     return right({
-      student
+      student,
     })
   }
 }

@@ -1,14 +1,17 @@
-import { UniqueEntityId } from "../../../..//core/entities/unique-entity-id";
-import { Comment as PrismaComment, Prisma, User as PrismaUser } from "@prisma/client";
-import { QuestionComment } from "../../../../domain/forum/enterprise/entities/question-comment"
-import { CommentWithAuthor } from "@/domain/forum/enterprise/entities/value-objecs/comment-with-author";
+import { UniqueEntityId } from '../../../..//core/entities/unique-entity-id'
+import {
+  Comment as PrismaComment,
+  Prisma,
+  User as PrismaUser,
+} from '@prisma/client'
+import { QuestionComment } from '../../../../domain/forum/enterprise/entities/question-comment'
+import { CommentWithAuthor } from '@/domain/forum/enterprise/entities/value-objecs/comment-with-author'
 
 type PrismaCommentWithAuthor = PrismaComment & {
   author: PrismaUser
 }
 export class PrismaCommentWithAuthorMapper {
   static toDoomain(raw: PrismaCommentWithAuthor): CommentWithAuthor {
-
     return CommentWithAuthor.create({
       commentId: new UniqueEntityId(raw.id),
       authorId: new UniqueEntityId(raw.authorId),
@@ -19,7 +22,9 @@ export class PrismaCommentWithAuthorMapper {
     })
   }
 
-  static toPersistence(questionComment: QuestionComment): Prisma.CommentUncheckedCreateInput {
+  static toPersistence(
+    questionComment: QuestionComment,
+  ): Prisma.CommentUncheckedCreateInput {
     return {
       id: questionComment.id.toString(),
       authorId: questionComment.authorId.toString(),

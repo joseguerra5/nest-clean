@@ -1,9 +1,11 @@
 import {
   BadRequestException,
   Body,
-  Controller, HttpCode, Post,
+  Controller,
+  HttpCode,
+  Post,
   UnauthorizedException,
-  UsePipes
+  UsePipes,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
@@ -21,9 +23,8 @@ export type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 @Controller('/sessions')
 @Public()
 export class AuthenticateController {
-  constructor(
-    private authenticateStudent: AuthenticateStudentUseCase,
-  ) { }
+  constructor(private authenticateStudent: AuthenticateStudentUseCase) {}
+
   @Post()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
@@ -32,7 +33,7 @@ export class AuthenticateController {
 
     const result = await this.authenticateStudent.execute({
       email,
-      password
+      password,
     })
 
     if (result.isLeft()) {
@@ -49,8 +50,7 @@ export class AuthenticateController {
     const { accessToken } = result.value
 
     return {
-      access_token: accessToken
+      access_token: accessToken,
     }
   }
-
 }

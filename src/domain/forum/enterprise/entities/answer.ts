@@ -59,7 +59,7 @@ export class Answer extends AggregateRoot<AnswerProps> {
   }
 
   static create(
-    props: Optional<AnswerProps, 'createdAt' | "attachments">,
+    props: Optional<AnswerProps, 'createdAt' | 'attachments'>,
     id?: UniqueEntityId,
   ) {
     const answer = new Answer(

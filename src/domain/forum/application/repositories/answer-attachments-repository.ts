@@ -1,6 +1,4 @@
-
-import { AnswerAttachment } from "../../enterprise/entities/answer-attachment"
-
+import { AnswerAttachment } from '../../enterprise/entities/answer-attachment'
 
 export abstract class AnswerAttachmentsRepository {
   abstract findManyByAnswerdId(answerId: string): Promise<AnswerAttachment[]>
@@ -8,4 +6,3 @@ export abstract class AnswerAttachmentsRepository {
   abstract createMany(attachments: AnswerAttachment[]): Promise<void>
   abstract deleteMany(attachments: AnswerAttachment[]): Promise<void>
 }
-

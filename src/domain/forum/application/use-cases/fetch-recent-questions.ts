@@ -7,22 +7,25 @@ interface FetchRecentQuestionUseCaseRequest {
   page: number
 }
 
-type FetchRecentQuestionUseCaseReponse = Either<null, {
-  questions: Question[]
-}>
+type FetchRecentQuestionUseCaseReponse = Either<
+  null,
+  {
+    questions: Question[]
+  }
+>
 
 @Injectable()
 export class FetchRecentQuestionUseCase {
   // dependencias
-  constructor(private questionsRepository: QuestionsRepository) { }
+  constructor(private questionsRepository: QuestionsRepository) {}
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
-    page
+    page,
   }: FetchRecentQuestionUseCaseRequest): Promise<FetchRecentQuestionUseCaseReponse> {
     const questions = await this.questionsRepository.findManyRecents({ page })
 
     return right({
-      questions
+      questions,
     })
   }
 }

@@ -1,6 +1,6 @@
 export class Slug {
   public value: string
-  
+
   private constructor(value: string) {
     this.value = value
   }
@@ -8,7 +8,6 @@ export class Slug {
   static create(slug: string) {
     return new Slug(slug)
   }
-
 
   static createFromText(text: string) {
     const slugText = text

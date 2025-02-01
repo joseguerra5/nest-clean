@@ -1,7 +1,10 @@
 import {
   BadRequestException,
   Body,
-  Controller, HttpCode, Param, Post
+  Controller,
+  HttpCode,
+  Param,
+  Post,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
@@ -13,21 +16,22 @@ export const commentOnAnswerBodySchema = z.object({
   content: z.string(),
 })
 
-export type CommentOnAnswerBodySchema = z.infer<typeof commentOnAnswerBodySchema>
+export type CommentOnAnswerBodySchema = z.infer<
+  typeof commentOnAnswerBodySchema
+>
 
 @Controller('/answers/:answerId/comments')
 export class CommentOnAnswerController {
-  constructor(
-    private commentOnAnswer: CommentOnAnswerUseCase,
-  ) { }
+  constructor(private commentOnAnswer: CommentOnAnswerUseCase) {}
+
   @Post()
   @HttpCode(201)
   async handle(
-    @Body(new ZodValidationPipe(commentOnAnswerBodySchema)) body: CommentOnAnswerBodySchema,
+    @Body(new ZodValidationPipe(commentOnAnswerBodySchema))
+    body: CommentOnAnswerBodySchema,
     @CurrentUser() user: UserPayload,
-    @Param("answerId") answerId: string
+    @Param('answerId') answerId: string,
   ) {
-
     const { content } = body
 
     const userId = user.sub

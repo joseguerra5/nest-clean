@@ -13,30 +13,33 @@ interface CreateQuestionUseCaseRequest {
   attachmentsIds: string[]
 }
 
-type CreateQuestionUseCaseReponse = Either<null, {
-  question: Question
-}>
+type CreateQuestionUseCaseReponse = Either<
+  null,
+  {
+    question: Question
+  }
+>
 
 @Injectable()
 export class CreateQuestionUseCase {
   // dependencias
-  constructor(private questionsRepository: QuestionsRepository) { }
+  constructor(private questionsRepository: QuestionsRepository) {}
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     authorId,
     content,
     title,
-    attachmentsIds
+    attachmentsIds,
   }: CreateQuestionUseCaseRequest): Promise<CreateQuestionUseCaseReponse> {
     const question = Question.create({
       content,
       authorId: new UniqueEntityId(authorId),
-      title
+      title,
     })
-    const questionAttachments = attachmentsIds.map(attachmentId => {
+    const questionAttachments = attachmentsIds.map((attachmentId) => {
       return QuestionAttachment.create({
         attachmentId: new UniqueEntityId(attachmentId),
-        questionId: question.id
+        questionId: question.id,
       })
     })
 
@@ -45,7 +48,7 @@ export class CreateQuestionUseCase {
     await this.questionsRepository.create(question)
 
     return right({
-      question
+      question,
     })
   }
 }

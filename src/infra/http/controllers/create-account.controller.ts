@@ -1,9 +1,11 @@
 import {
   BadRequestException,
-  Body, ConflictException, Controller,
+  Body,
+  ConflictException,
+  Controller,
   HttpCode,
   Post,
-  UsePipes
+  UsePipes,
 } from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
@@ -24,7 +26,7 @@ export type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 @Controller('/accounts')
 @Public()
 export class CreateAccountController {
-  constructor(private createStudent: RegisterStudentUseCase) { }
+  constructor(private createStudent: RegisterStudentUseCase) {}
   @Post()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createAccountBodySchema))
@@ -34,7 +36,7 @@ export class CreateAccountController {
     const result = await this.createStudent.execute({
       email,
       name,
-      password
+      password,
     })
 
     if (result.isLeft()) {

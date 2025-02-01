@@ -1,5 +1,9 @@
 import {
-  BadRequestException, Controller, Delete, HttpCode, Param
+  BadRequestException,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
@@ -7,20 +11,19 @@ import { DeleteQuestionCommentUseCase } from '@/domain/forum/application/use-cas
 
 @Controller('/questions/:id/comments')
 export class DeleteCommentOnQuestionController {
-  constructor(
-    private deleteQuestionComment: DeleteQuestionCommentUseCase,
-  ) { }
+  constructor(private deleteQuestionComment: DeleteQuestionCommentUseCase) {}
+
   @Delete()
   @HttpCode(200)
   async handle(
-    @Param("id") commentId: string,
-    @CurrentUser() user: UserPayload
+    @Param('id') commentId: string,
+    @CurrentUser() user: UserPayload,
   ) {
     const userId = user.sub
 
     const result = await this.deleteQuestionComment.execute({
       authorId: userId,
-      questionCommentId: commentId
+      questionCommentId: commentId,
     })
 
     if (result.isLeft()) {

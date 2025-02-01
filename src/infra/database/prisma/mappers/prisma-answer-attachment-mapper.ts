@@ -1,35 +1,38 @@
-import { UniqueEntityId } from "../../../..//core/entities/unique-entity-id";
-import { Prisma, Attachment as PrismaAttachment, } from "@prisma/client";
-import { AnswerAttachment } from "../../../../domain/forum/enterprise/entities/answer-attachment"
+import { UniqueEntityId } from '../../../..//core/entities/unique-entity-id'
+import { Prisma, Attachment as PrismaAttachment } from '@prisma/client'
+import { AnswerAttachment } from '../../../../domain/forum/enterprise/entities/answer-attachment'
 
 export class PrismaAnswerAttachmentMapper {
   static toDoomain(raw: PrismaAttachment): AnswerAttachment {
     if (!raw.answerId) {
-      throw new Error("Invalid attachment type")
+      throw new Error('Invalid attachment type')
     }
 
-    return AnswerAttachment.create({
-      attachmentId: new UniqueEntityId(raw.id),
-      answerId: new UniqueEntityId(raw.answerId),
-    }, new UniqueEntityId(raw.id))
+    return AnswerAttachment.create(
+      {
+        attachmentId: new UniqueEntityId(raw.id),
+        answerId: new UniqueEntityId(raw.answerId),
+      },
+      new UniqueEntityId(raw.id),
+    )
   }
 
   static toPrismaUpdateMany(
-      attachments: AnswerAttachment[]
-    ): Prisma.AttachmentUpdateManyArgs {
-      const attachmentsIds = attachments.map(attachment => {
-        return attachment.attachmentId.toString()
-      })
-  
-      return {
-        where: {
-          id: {
-            in: attachmentsIds
-          },
+    attachments: AnswerAttachment[],
+  ): Prisma.AttachmentUpdateManyArgs {
+    const attachmentsIds = attachments.map((attachment) => {
+      return attachment.attachmentId.toString()
+    })
+
+    return {
+      where: {
+        id: {
+          in: attachmentsIds,
         },
-        data: {
-          answerId: attachments[0].answerId.toString()
-        }
-      }
+      },
+      data: {
+        answerId: attachments[0].answerId.toString(),
+      },
     }
+  }
 }

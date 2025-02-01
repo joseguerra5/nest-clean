@@ -13,22 +13,24 @@ interface AnswerQuestionUseCaseRequest {
   attachmentsIds: string[]
 }
 
-type AnswerQuestionUseCaseResponse = Either<null, {
-  answer: Answer
-}>
+type AnswerQuestionUseCaseResponse = Either<
+  null,
+  {
+    answer: Answer
+  }
+>
 
 @Injectable()
 export class AnswerQuestionUseCase {
   // dependencias
-  constructor(private answersRepository: AnswersRepository) { }
+  constructor(private answersRepository: AnswersRepository) {}
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     authorId,
     questionId,
     content,
-    attachmentsIds
+    attachmentsIds,
   }: AnswerQuestionUseCaseRequest): Promise<AnswerQuestionUseCaseResponse> {
-
     const answer = Answer.create({
       content,
       authorId: new UniqueEntityId(authorId),

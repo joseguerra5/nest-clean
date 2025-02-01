@@ -1,19 +1,19 @@
-import { Either, left, right } from "./either"
+import { Either, left, right } from './either'
 
 function doSomething(x: boolean): Either<string, number> {
   if (x) {
     return right(10)
   } else {
-    return left("error")
+    return left('error')
   }
 }
-test("success result", ()=> {
+test('success result', () => {
   const result = doSomething(true)
 
   expect(result.isRight()).toBe(true)
 })
 
-test("error result", ()=> {
+test('error result', () => {
   const result = doSomething(false)
 
   expect(result.isRight()).toBe(false)

@@ -12,9 +12,12 @@ interface CommentOnQuestionUseCaseRequest {
   content: string
 }
 
-type CommentOnQuestionUseCaseReponse = Either<ResouceNotFoundError, {
-  questionComment: QuestionComment
-}>
+type CommentOnQuestionUseCaseReponse = Either<
+  ResouceNotFoundError,
+  {
+    questionComment: QuestionComment
+  }
+>
 
 @Injectable()
 export class CommentOnQuestionUseCase {
@@ -22,12 +25,13 @@ export class CommentOnQuestionUseCase {
   constructor(
     private questionsCommentsRepository: QuestionsCommentsRepository,
     private questionsRepository: QuestionsRepository,
-  ) { }
+  ) {}
+
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     authorId,
     content,
-    questionId
+    questionId,
   }: CommentOnQuestionUseCaseRequest): Promise<CommentOnQuestionUseCaseReponse> {
     const question = await this.questionsRepository.findById(questionId)
 
@@ -39,13 +43,13 @@ export class CommentOnQuestionUseCase {
     const questionComment = QuestionComment.create({
       authorId: new UniqueEntityId(authorId),
       questionId: new UniqueEntityId(questionId),
-      content
+      content,
     })
 
     await this.questionsCommentsRepository.create(questionComment)
 
     return right({
-      questionComment
+      questionComment,
     })
   }
 }

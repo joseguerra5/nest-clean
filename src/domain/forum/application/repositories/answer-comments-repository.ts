@@ -7,7 +7,15 @@ import { CommentWithAuthor } from '../../enterprise/entities/value-objecs/commen
 export abstract class AnswerCommentsRepository {
   abstract create(answerComment: AnswerComment): Promise<void>
   abstract findById(id: string): Promise<AnswerComment | null>
-  abstract findManyByAnswerId(answerId: string, params: PaginationParams): Promise<AnswerComment[]>
-  abstract findManyByAnswerIdWithAuthor(answerId: string, params: PaginationParams): Promise<CommentWithAuthor[]>
+  abstract findManyByAnswerId(
+    answerId: string,
+    params: PaginationParams,
+  ): Promise<AnswerComment[]>
+
+  abstract findManyByAnswerIdWithAuthor(
+    answerId: string,
+    params: PaginationParams,
+  ): Promise<CommentWithAuthor[]>
+
   abstract delete(questionComment: AnswerComment): Promise<void>
 }

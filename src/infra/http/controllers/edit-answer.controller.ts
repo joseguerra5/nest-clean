@@ -1,7 +1,10 @@
 import {
   BadRequestException,
   Body,
-  Controller, HttpCode, Param, Post, Put, UseGuards
+  Controller,
+  HttpCode,
+  Param,
+  Put,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
@@ -18,17 +21,16 @@ export type EditAnswerBodySchema = z.infer<typeof editAnswerBodySchema>
 
 @Controller('/answers/:id')
 export class EditAnswerController {
-  constructor(
-    private editAnswer: EditAnswerUseCase,
-  ) { }
+  constructor(private editAnswer: EditAnswerUseCase) {}
+
   @Put()
   @HttpCode(204)
   async handle(
-    @Body(new ZodValidationPipe(editAnswerBodySchema)) body: EditAnswerBodySchema,
+    @Body(new ZodValidationPipe(editAnswerBodySchema))
+    body: EditAnswerBodySchema,
     @CurrentUser() user: UserPayload,
-    @Param("id") answerId: string
+    @Param('id') answerId: string,
   ) {
-
     const { content, attachments } = body
 
     const userId = user.sub
@@ -37,7 +39,7 @@ export class EditAnswerController {
       content,
       authorId: userId,
       answerId,
-      attachmentsIds: attachments
+      attachmentsIds: attachments,
     })
 
     if (result.isLeft()) {

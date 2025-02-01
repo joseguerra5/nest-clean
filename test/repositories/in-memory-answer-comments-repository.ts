@@ -4,19 +4,22 @@ import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment
 import { CommentWithAuthor } from '@/domain/forum/enterprise/entities/value-objecs/comment-with-author'
 import { InMemoryStudentRepository } from './in-memory-student-repository'
 
-export class InMemoryAnswerCommentRepository implements AnswerCommentsRepository {
+export class InMemoryAnswerCommentRepository
+  implements AnswerCommentsRepository
+{
   public items: AnswerComment[] = []
 
-  constructor(
-    private inMemoryStudentsRepository: InMemoryStudentRepository
-  ) { }
+  constructor(private inMemoryStudentsRepository: InMemoryStudentRepository) {}
 
-  async findManyByAnswerIdWithAuthor(answerId: string, { page }: PaginationParams): Promise<CommentWithAuthor[]> {
+  async findManyByAnswerIdWithAuthor(
+    answerId: string,
+    { page }: PaginationParams,
+  ): Promise<CommentWithAuthor[]> {
     const answerComments = this.items
       .filter((item) => item.answerId.toString() === answerId)
       .slice((page - 1) * 20, page * 20)
-      .map(comment => {
-        const author = this.inMemoryStudentsRepository.items.find(student => {
+      .map((comment) => {
+        const author = this.inMemoryStudentsRepository.items.find((student) => {
           return student.id.equals(comment.authorId)
         })
 
@@ -54,8 +57,11 @@ export class InMemoryAnswerCommentRepository implements AnswerCommentsRepository
 
     return answerComment
   }
+
   async delete(answerComment: AnswerComment): Promise<void> {
-    const itemIndex = this.items.findIndex((item) => item.id === answerComment.id)
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === answerComment.id,
+    )
 
     this.items.splice(itemIndex, 1)
   }
@@ -63,6 +69,4 @@ export class InMemoryAnswerCommentRepository implements AnswerCommentsRepository
   async create(answerComment: AnswerComment) {
     this.items.push(answerComment)
   }
-
-
 }

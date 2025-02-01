@@ -2,7 +2,7 @@ import { Either, right } from '@/core/either'
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Notification } from '../../enterprise/entities/notification'
 import { NotificationRepository } from '../repositories/notification-repository'
-
+import { Injectable } from '@nestjs/common'
 
 export interface SendNotificationUseCaseRequest {
   recipientId: string
@@ -10,13 +10,17 @@ export interface SendNotificationUseCaseRequest {
   content: string
 }
 
-export type SendNotificationUseCaseReponse = Either<null, {
-  notification: Notification
-}>
+export type SendNotificationUseCaseReponse = Either<
+  null,
+  {
+    notification: Notification
+  }
+>
 
+@Injectable()
 export class SendNotificationUseCase {
   // dependencias
-  constructor(private notificationsRepository: NotificationRepository) { }
+  constructor(private notificationsRepository: NotificationRepository) {}
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     recipientId,
@@ -26,13 +30,13 @@ export class SendNotificationUseCase {
     const notification = Notification.create({
       content,
       recipientId: new UniqueEntityId(recipientId),
-      title
+      title,
     })
 
     await this.notificationsRepository.create(notification)
 
     return right({
-      notification
+      notification,
     })
   }
 }

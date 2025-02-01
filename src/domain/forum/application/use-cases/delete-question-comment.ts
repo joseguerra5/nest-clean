@@ -9,16 +9,23 @@ interface DeleteQuestionCommentUseCaseRequest {
   authorId: string
 }
 
-type DeleteQuestionCommentUseCaseReponse = Either<NotAllowedError | ResouceNotFoundError, {}>
+type DeleteQuestionCommentUseCaseReponse = Either<
+  NotAllowedError | ResouceNotFoundError,
+  {}
+>
 
 @Injectable()
 export class DeleteQuestionCommentUseCase {
-  constructor(private questionsCommentsRepository: QuestionsCommentsRepository) { }
+  constructor(
+    private questionsCommentsRepository: QuestionsCommentsRepository,
+  ) {}
+
   async execute({
     questionCommentId,
     authorId,
   }: DeleteQuestionCommentUseCaseRequest): Promise<DeleteQuestionCommentUseCaseReponse> {
-    const questionComment = await this.questionsCommentsRepository.findById(questionCommentId)
+    const questionComment =
+      await this.questionsCommentsRepository.findById(questionCommentId)
 
     if (!questionComment) {
       return left(new ResouceNotFoundError())

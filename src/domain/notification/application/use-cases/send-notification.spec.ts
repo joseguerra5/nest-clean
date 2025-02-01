@@ -1,4 +1,3 @@
-import { InMemoryQuestionRepository } from 'test/repositories/in-memory-questions-repository'
 import { SendNotificationUseCase } from './send-notification'
 import { InMemoryNotificationRepository } from 'test/repositories/in-memory-notification-repository'
 
@@ -14,10 +13,12 @@ describe('Send Notification', () => {
     const result = await sut.execute({
       content: 'nova resposta',
       title: 'Nova pergunta',
-      recipientId: 'recipient-id'
+      recipientId: 'recipient-id',
     })
 
     expect(result.isRight()).toBe(true)
-    expect(inMemoryNotificationRepository.items[0]).toEqual(result.value?.notification)
+    expect(inMemoryNotificationRepository.items[0]).toEqual(
+      result.value?.notification,
+    )
   })
 })

@@ -1,7 +1,10 @@
 import {
   BadRequestException,
   Body,
-  Controller, HttpCode, Param, Put
+  Controller,
+  HttpCode,
+  Param,
+  Put,
 } from '@nestjs/common'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
@@ -12,24 +15,23 @@ import { EditQuestionUseCase } from '@/domain/forum/application/use-cases/edit-q
 export const editQuestionBodySchema = z.object({
   title: z.string(),
   content: z.string(),
-  attachments: z.array(z.string().uuid())
+  attachments: z.array(z.string().uuid()),
 })
 
 export type EditQuestionBodySchema = z.infer<typeof editQuestionBodySchema>
 
 @Controller('/questions/:id')
 export class EditQuestionController {
-  constructor(
-    private editQuestion: EditQuestionUseCase,
-  ) { }
+  constructor(private editQuestion: EditQuestionUseCase) {}
+
   @Put()
   @HttpCode(204)
   async handle(
-    @Body(new ZodValidationPipe(editQuestionBodySchema)) body: EditQuestionBodySchema,
+    @Body(new ZodValidationPipe(editQuestionBodySchema))
+    body: EditQuestionBodySchema,
     @CurrentUser() user: UserPayload,
-    @Param("id") questionId: string
+    @Param('id') questionId: string,
   ) {
-
     const { content, title, attachments } = body
 
     const userId = user.sub

@@ -8,7 +8,7 @@ import { EnvService } from '../env/env.service'
 import { EnvModule } from '../env/env.module'
 
 @Module({
-  // tem que importar o PassportModule e o JWT module, faço o inject do config service para usar as variaveis ambientes 
+  // tem que importar o PassportModule e o JWT module, faço o inject do config service para usar as variaveis ambientes
   imports: [
     PassportModule,
     EnvModule,
@@ -20,9 +20,9 @@ import { EnvModule } from '../env/env.module'
         const privateKey = env.get('JWT_PRIVATE_KEY')
         const publicKey = env.get('JWT_PUBLIC_KEY')
         return {
-          signOptions: { algorithm: "RS256" },
-          privateKey: Buffer.from(privateKey, "base64"),
-          publicKey: Buffer.from(publicKey, "base64")
+          signOptions: { algorithm: 'RS256' },
+          privateKey: Buffer.from(privateKey, 'base64'),
+          publicKey: Buffer.from(publicKey, 'base64'),
         }
       },
     }),
@@ -32,8 +32,8 @@ import { EnvModule } from '../env/env.module'
     EnvService,
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard
-    }
-  ]
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}

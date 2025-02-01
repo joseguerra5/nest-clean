@@ -9,7 +9,9 @@ export interface CommentProps {
 }
 
 // classe abstrata para ser extendida por outras classes
-export abstract class Comment<Props extends CommentProps> extends Entity<Props> {
+export abstract class Comment<
+  Props extends CommentProps,
+> extends Entity<Props> {
   // evita que outras propriedades acessam a propriedade comment e não são manipuladas diretamente
   get authorId() {
     return this.props.authorId
@@ -36,5 +38,4 @@ export abstract class Comment<Props extends CommentProps> extends Entity<Props> 
   private touch() {
     this.props.updatedAt = new Date()
   }
-
 }

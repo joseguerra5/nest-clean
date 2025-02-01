@@ -1,4 +1,4 @@
-import { CommentWithAuthor } from "@/domain/forum/enterprise/entities/value-objecs/comment-with-author";
+import { CommentWithAuthor } from '@/domain/forum/enterprise/entities/value-objecs/comment-with-author'
 
 export class CommentWithAuthorPresenter {
   static toHTTP(commentWithAutor: CommentWithAuthor) {
@@ -9,7 +9,6 @@ export class CommentWithAuthorPresenter {
       content: commentWithAutor.content,
       createdAt: commentWithAutor.createdAt,
       updatedAt: commentWithAutor.updatedAt,
-
     }
   }
 }

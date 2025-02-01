@@ -1,29 +1,36 @@
 import { Either, left, right } from '@/core/either'
-import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Notification } from '../../enterprise/entities/notification'
 import { NotificationRepository } from '../repositories/notification-repository'
 import { ResouceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
-
+import { Injectable } from '@nestjs/common'
 
 interface ReadNotificationUseCaseRequest {
   recipientId: string
   notificationId: string
 }
 
-type ReadNotificationUseCaseReponse = Either<ResouceNotFoundError | NotAllowedError, {
-  notification: Notification
-}>
+type ReadNotificationUseCaseReponse = Either<
+  ResouceNotFoundError | NotAllowedError,
+  {
+    notification: Notification
+  }
+>
 
+@Injectable()
 export class ReadNotificationUseCase {
   // dependencias
-  constructor(private notificationsRepository: NotificationRepository) { }
+  constructor(private notificationsRepository: NotificationRepository) {}
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     recipientId,
-    notificationId
+    notificationId,
   }: ReadNotificationUseCaseRequest): Promise<ReadNotificationUseCaseReponse> {
-    const notification = await this.notificationsRepository.findById(notificationId)
+    console.log(recipientId, notificationId)
+    const notification =
+      await this.notificationsRepository.findById(notificationId)
+
+    console.log(notification)
 
     if (!notification) {
       return left(new ResouceNotFoundError())
@@ -38,7 +45,7 @@ export class ReadNotificationUseCase {
     await this.notificationsRepository.create(notification)
 
     return right({
-      notification
+      notification,
     })
   }
 }

@@ -1,5 +1,5 @@
-import { UniqueEntityId } from "@/core/entities/unique-entity-id";
-import { ValueObject } from "@/core/entities/value-object";
+import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { ValueObject } from '@/core/entities/value-object'
 
 // informações que eu quero transportar
 export interface CommentWithAuthorProps {

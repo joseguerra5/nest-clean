@@ -1,22 +1,30 @@
-import { DomainEvents } from "@/core/events/domain-events";
-import { EventHandler } from "@/core/events/event-handler";
-import { QuestionsRepository } from "@/domain/forum/application/repositories/questions-repository";
-import { AnswerCreatedEvent } from "@/domain/forum/enterprise/events/answer-created-event";
-import { SendNotificationUseCase } from "../application/use-cases/send-notification";
+import { DomainEvents } from '@/core/events/domain-events'
+import { EventHandler } from '@/core/events/event-handler'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
+import { AnswerCreatedEvent } from '@/domain/forum/enterprise/events/answer-created-event'
+import { SendNotificationUseCase } from '../application/use-cases/send-notification'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class OnAnswerCreated implements EventHandler {
   constructor(
     private questionRepository: QuestionsRepository,
-    private sendNotification: SendNotificationUseCase
+    private sendNotification: SendNotificationUseCase,
   ) {
     this.setupSubscriptions()
   }
+
   setupSubscriptions(): void {
-    DomainEvents.register(this.sendNewAnswerNotification.bind(this), AnswerCreatedEvent.name)
+    DomainEvents.register(
+      this.sendNewAnswerNotification.bind(this),
+      AnswerCreatedEvent.name,
+    )
   }
 
   private async sendNewAnswerNotification({ answer }: AnswerCreatedEvent) {
-    const question = await this.questionRepository.findById(answer.questionId.toString())
+    const question = await this.questionRepository.findById(
+      answer.questionId.toString(),
+    )
 
     if (question) {
       await this.sendNotification.execute({

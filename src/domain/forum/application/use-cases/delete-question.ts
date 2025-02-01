@@ -1,6 +1,4 @@
 import { Either, left, right } from '@/core/either'
-import { UniqueEntityId } from '@/core/entities/unique-entity-id'
-import { Question } from '../../enterprise/entities/question'
 import { QuestionsRepository } from '../repositories/questions-repository'
 import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { ResouceNotFoundError } from '@/core/errors/resource-not-found-error'
@@ -11,11 +9,14 @@ interface DeleteQuestionUseCaseRequest {
   authorId: string
 }
 
-type DeleteQuestionUseCaseReponse = Either<NotAllowedError | ResouceNotFoundError, {}>
+type DeleteQuestionUseCaseReponse = Either<
+  NotAllowedError | ResouceNotFoundError,
+  {}
+>
 
 @Injectable()
 export class DeleteQuestionUseCase {
-  constructor(private questionsRepository: QuestionsRepository) { }
+  constructor(private questionsRepository: QuestionsRepository) {}
   async execute({
     questionId,
     authorId,

@@ -5,9 +5,12 @@ import { AnswersRepository } from '@/domain/forum/application/repositories/answe
 import { Answer } from '@/domain/forum/enterprise/entities/answer'
 
 export class InMemoryAnswerRepository implements AnswersRepository {
-  constructor(private answerAttachmentRepository: AnswerAttachmentsRepository,) {}
+  constructor(
+    private answerAttachmentRepository: AnswerAttachmentsRepository,
+  ) {}
+
   public items: Answer[] = []
-  
+
   async findManyByQuestiondId(questionId: string, { page }: PaginationParams) {
     const answers = this.items
       .filter((item) => item.questionId.toString() === questionId)
@@ -21,8 +24,12 @@ export class InMemoryAnswerRepository implements AnswersRepository {
 
     this.items[itemIndex] = answer
 
-    await this.answerAttachmentRepository.createMany(answer.attachments.getNewItems())
-    await this.answerAttachmentRepository.deleteMany(answer.attachments.getRemovedItems())
+    await this.answerAttachmentRepository.createMany(
+      answer.attachments.getNewItems(),
+    )
+    await this.answerAttachmentRepository.deleteMany(
+      answer.attachments.getRemovedItems(),
+    )
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
   }
@@ -46,7 +53,9 @@ export class InMemoryAnswerRepository implements AnswersRepository {
   async create(answer: Answer) {
     this.items.push(answer)
 
-    await this.answerAttachmentRepository.createMany(answer.attachments.getItems())
+    await this.answerAttachmentRepository.createMany(
+      answer.attachments.getItems(),
+    )
 
     DomainEvents.dispatchEventsForAggregate(answer.id)
   }

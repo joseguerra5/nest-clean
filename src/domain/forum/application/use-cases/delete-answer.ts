@@ -4,17 +4,19 @@ import { NotAllowedError } from '@/core/errors/not-allowed-error'
 import { ResouceNotFoundError } from '@/core/errors/resource-not-found-error'
 import { Injectable } from '@nestjs/common'
 
-
 interface DeleteAnswerUseCaseRequest {
   answerId: string
   authorId: string
 }
 
-type DeleteAnswerUseCaseReponse = Either<NotAllowedError | ResouceNotFoundError, {}>
+type DeleteAnswerUseCaseReponse = Either<
+  NotAllowedError | ResouceNotFoundError,
+  {}
+>
 
 @Injectable()
 export class DeleteAnswerUseCase {
-  constructor(private answersRepository: AnswersRepository) { }
+  constructor(private answersRepository: AnswersRepository) {}
   async execute({
     answerId,
     authorId,
@@ -23,13 +25,13 @@ export class DeleteAnswerUseCase {
 
     if (!answer) {
       return left(new ResouceNotFoundError())
-      throw new Error("Answer not found")
+      throw new Error('Answer not found')
     }
 
     if (authorId !== answer.authorId.toString()) {
       return left(new NotAllowedError())
 
-      throw new Error("Not alowed")
+      throw new Error('Not alowed')
     }
 
     await this.answersRepository.delete(answer)

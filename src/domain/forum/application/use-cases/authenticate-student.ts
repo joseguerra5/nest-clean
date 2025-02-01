@@ -10,9 +10,12 @@ interface AuthenticateStudentUseCaseRequest {
   password: string
 }
 
-type AuthenticateStudentUseCaseReponse = Either<WrongCredentialsError, {
-  accessToken: string
-}>
+type AuthenticateStudentUseCaseReponse = Either<
+  WrongCredentialsError,
+  {
+    accessToken: string
+  }
+>
 
 @Injectable()
 export class AuthenticateStudentUseCase {
@@ -20,31 +23,35 @@ export class AuthenticateStudentUseCase {
   constructor(
     private studentsRepository: StudentsRepository,
     private hashCompare: HashComparer,
-    private encrypter: Encrypter
-  ) { }
+    private encrypter: Encrypter,
+  ) {}
+
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     email,
-    password
+    password,
   }: AuthenticateStudentUseCaseRequest): Promise<AuthenticateStudentUseCaseReponse> {
-
     const student = await this.studentsRepository.findByEmail(email)
 
     if (!student) {
       return left(new WrongCredentialsError())
     }
 
-    const isPasswordValid = await this.hashCompare.compare(password, student.password)
+    const isPasswordValid = await this.hashCompare.compare(
+      password,
+      student.password,
+    )
 
     if (!isPasswordValid) {
       return left(new WrongCredentialsError())
     }
 
-    const accessToken = await this.encrypter.encrypt({sub: student.id.toString()})
-
+    const accessToken = await this.encrypter.encrypt({
+      sub: student.id.toString(),
+    })
 
     return right({
-      accessToken
+      accessToken,
     })
   }
 }

@@ -8,23 +8,29 @@ interface FetchQuestionAnswerUseCaseRequest {
   page: number
 }
 
-type FetchQuestionAnswerUseCaseReponse = Either<null, {
-  answers: Answer[]
-}>
+type FetchQuestionAnswerUseCaseReponse = Either<
+  null,
+  {
+    answers: Answer[]
+  }
+>
 
 @Injectable()
 export class FetchQuestionAnswerUseCase {
   // dependencias
-  constructor(private answerRepository: AnswersRepository) { }
+  constructor(private answerRepository: AnswersRepository) {}
   // ter apenas um metodo, responsabilidade única do solid
   async execute({
     page,
-    questionId
+    questionId,
   }: FetchQuestionAnswerUseCaseRequest): Promise<FetchQuestionAnswerUseCaseReponse> {
-    const answers = await this.answerRepository.findManyByQuestiondId(questionId, { page })
+    const answers = await this.answerRepository.findManyByQuestiondId(
+      questionId,
+      { page },
+    )
 
     return right({
-      answers
+      answers,
     })
   }
 }

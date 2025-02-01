@@ -3,14 +3,13 @@ import { QuestionsCommentsRepository } from '@/domain/forum/application/reposito
 import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
 import { InMemoryStudentRepository } from './in-memory-student-repository'
 import { CommentWithAuthor } from '@/domain/forum/enterprise/entities/value-objecs/comment-with-author'
-import { au } from 'vitest/dist/chunks/reporters.D7Jzd9GS'
 
-export class InMemoryQuestionCommentRepository implements QuestionsCommentsRepository {
+export class InMemoryQuestionCommentRepository
+  implements QuestionsCommentsRepository
+{
   public items: QuestionComment[] = []
 
-  constructor(
-    private inMemoryStudentsRepository: InMemoryStudentRepository
-  ) { }
+  constructor(private inMemoryStudentsRepository: InMemoryStudentRepository) {}
 
   async findManyByQuestionId(questionId: string, { page }: PaginationParams) {
     const questionComments = this.items
@@ -20,12 +19,15 @@ export class InMemoryQuestionCommentRepository implements QuestionsCommentsRepos
     return questionComments
   }
 
-  async findManyByQuestionIdWithAutor(questionId: string, { page }: PaginationParams) {
+  async findManyByQuestionIdWithAutor(
+    questionId: string,
+    { page }: PaginationParams,
+  ) {
     const questionComments = this.items
       .filter((item) => item.questionId.toString() === questionId)
       .slice((page - 1) * 20, page * 20)
-      .map(comment => {
-        const author = this.inMemoryStudentsRepository.items.find(student => {
+      .map((comment) => {
+        const author = this.inMemoryStudentsRepository.items.find((student) => {
           return student.id.equals(comment.authorId)
         })
 
@@ -55,14 +57,16 @@ export class InMemoryQuestionCommentRepository implements QuestionsCommentsRepos
 
     return questionComment
   }
+
   async delete(questionComment: QuestionComment): Promise<void> {
-    const itemIndex = this.items.findIndex((item) => item.id === questionComment.id)
+    const itemIndex = this.items.findIndex(
+      (item) => item.id === questionComment.id,
+    )
 
     this.items.splice(itemIndex, 1)
   }
+
   async create(questionComment: QuestionComment) {
     this.items.push(questionComment)
   }
-
-
 }

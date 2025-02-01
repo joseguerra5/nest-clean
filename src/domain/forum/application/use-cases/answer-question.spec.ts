@@ -1,6 +1,6 @@
-import { InMemoryAnswerRepository } from "test/repositories/in-memory-answer-repository"
-import { AnswerQuestionUseCase } from "./answer-question"
-import { InMemoryAnswerAttachmentRepository } from "test/repositories/in-memory-answer-attachment-repository"
+import { InMemoryAnswerRepository } from 'test/repositories/in-memory-answer-repository'
+import { AnswerQuestionUseCase } from './answer-question'
+import { InMemoryAnswerAttachmentRepository } from 'test/repositories/in-memory-answer-attachment-repository'
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository
 let inMemoryAnswerAttachmentRepository: InMemoryAnswerAttachmentRepository
@@ -8,8 +8,11 @@ let sut: AnswerQuestionUseCase
 
 describe('Create a answer', () => {
   beforeEach(() => {
-    inMemoryAnswerAttachmentRepository = new InMemoryAnswerAttachmentRepository()
-    inMemoryAnswerRepository = new InMemoryAnswerRepository(inMemoryAnswerAttachmentRepository)
+    inMemoryAnswerAttachmentRepository =
+      new InMemoryAnswerAttachmentRepository()
+    inMemoryAnswerRepository = new InMemoryAnswerRepository(
+      inMemoryAnswerAttachmentRepository,
+    )
     sut = new AnswerQuestionUseCase(inMemoryAnswerRepository)
   })
   it('should be able create a answer', async () => {
@@ -17,7 +20,7 @@ describe('Create a answer', () => {
       content: 'nova resposta',
       authorId: '01',
       questionId: '01',
-      attachmentsIds: []
+      attachmentsIds: [],
     })
 
     expect(result.isRight()).toBe(true)
@@ -28,8 +31,8 @@ describe('Create a answer', () => {
     const result = await sut.execute({
       content: 'new answer',
       authorId: '01',
-      attachmentsIds: ["1", "2"],
-      questionId: "01"
+      attachmentsIds: ['1', '2'],
+      questionId: '01',
     })
 
     expect(result.isRight()).toBe(true)
